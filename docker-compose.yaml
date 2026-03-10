@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres:15
+    container_name: forms_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: yandex_forms
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    container_name: forms_app
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/yandex_forms
