@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from app.db.session import engine, Base
 from app.models import user, form, answer
-from app.api.v1 import auth, forms
+from app.api.v1 import auth, forms, responses
 
 #Создание таблиц
 Base.metadata.create_all(bind=engine)
@@ -13,6 +13,7 @@ app = FastAPI(
 
 app.include_router(auth.router)
 app.include_router(forms.router)
+app.include_router(responses.router)
 
 @app.get("/")
 def root():
