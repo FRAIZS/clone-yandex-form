@@ -2,6 +2,7 @@ from app.models.form import Form, Field
 from app.schemas.form import FormCreate
 
 from sqlalchemy.orm import Session
+from sqlalchemy import  asc, desc
 
 def create_form(db: Session, form_schema: FormCreate, owner_id: int):
     # Созжание формы
@@ -64,3 +65,28 @@ def update_form(db: Session, form_id: int, form_data: FormCreate):
     db.commit()
     db.refresh(db_form)
     return db_form
+
+def get_user_forms(
+    db: Session,
+    owner_id: int,
+    search: str = None,
+    sort_by: str = "id",
+):
+    query = db.query(Form).filter(Form.owner_id == owner_id)
+    
+    # Фильтр по названию 
+    if search:
+        query = query.filter(Form.title.ilike(f"%{search}%"))
+        
+    # Сортировка
+    if sort_by == "title":
+        query = query.order_by(asc(Form.title))
+    
+    elif sort_by == "-title":
+        query = query.order_by(desc(Form.title))
+    
+    # Поумолчанию самые новые  
+    else:
+        query = query.order_by(desc(Form.id)) 
+        
+    return query.all()
