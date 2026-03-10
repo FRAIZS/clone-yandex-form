@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from app.db.session import engine, Base
-from app.models import user, form
+from app.models import user, form, answer
 from app.api.v1 import auth, forms
 
 #Создание таблиц
